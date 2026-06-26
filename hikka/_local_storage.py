@@ -84,7 +84,7 @@ class LocalStorage:
         """
         path = self._get_path(repo, module_name)
         if os.path.isfile(path):
-            with open(path, "r") as f:
+            with open(path, "r", encoding="utf-8") as f:
                 return f.read()
 
         return None

@@ -4,16 +4,18 @@ aiofile==3.8.1
 gitpython==3.1.27
 meval==2.5
 aiohttp_jinja2==1.5
-aiohttp==3.8.3
+aiohttp==3.9.1
 Jinja2==3.0.3
 requests==2.27.1
 aiogram==2.19
+Babel==2.9.1
 grapheme==0.6.0
 emoji==2.1.0
 werkzeug==2.2.2
 psutil==5.9.4
-tgcrypto==1.2.5
 rsa==4.9
 ruamel.yaml==0.17.21
 
-# Python 3.12+
+# Optional: tgcrypto speeds up crypto operations but has no Windows wheels.
+# On Linux install with: pip install tgcrypto==1.2.5
+# tgcrypto==1.2.5

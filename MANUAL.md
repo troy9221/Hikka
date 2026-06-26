@@ -23,8 +23,9 @@
 
 ## 1. Требования
 
-- **Python 3.8–3.12** (рекомендуется 3.11 или 3.12).
-  - ⚠️ **Python 3.13 не поддерживается** — пакеты `aiohttp==3.8.3` и `tgcrypto==1.2.5` не собираются на нём без Visual C++ Build Tools.
+- **Python 3.8–3.12** (рекомендуется 3.12 — протестировано и поддерживается).
+  - ⚠️ **Python 3.13 не поддерживается** — пакеты `aiohttp` и `tgcrypto` не собираются на нём без Visual C++ Build Tools.
+  - ✅ **Python 3.12 полностью поддерживается** — код исправлен для корректной работы на Windows (кодировка UTF-8 при чтении файлов).
 - **Git** — для клонирования репозитория и работы обновлятора.
 - **pip** — идёт в комплекте с Python.
 - Около **500 МБ** свободного места.
@@ -114,7 +115,8 @@ python -m hikka
 
 ### Шаг 1. Установить Python
 
-1. Скачайте **Python 3.11 или 3.12** с https://www.python.org/downloads/
+1. Скачайте **Python 3.12** с https://www.python.org/downloads/
+   - ✅ Python 3.12 протестирован и полностью поддерживается.
    - ⚠️ Не используйте Python 3.13.
 2. При установке отметьте галочку **«Add Python to PATH»**.
 
@@ -134,10 +136,14 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-> Если при установке возникает ошибка сборки `tgcrypto` или `aiohttp`:
-> - Установите [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
->   (нужен компонент «Desktop development with C++»), либо
-> - Используйте Python 3.11/3.12, для которых есть готовые wheels.
+> `tgcrypto` (опциональное C-расширение для ускорения криптографии) исключён из
+> обязательных зависимостей, т.к. не имеет готовых wheels для Windows.
+> Hikka работает и без него (чуть медленнее). На Linux можно установить отдельно:
+> `pip install tgcrypto`
+>
+> Если всё же нужна ошибка сборки `aiohttp` — установите
+> [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+> (компонент «Desktop development with C++»).
 
 ### Шаг 4. Запуск
 
@@ -386,9 +392,12 @@ python3 -m hikka
 
 ### «Microsoft Visual C++ 14.0 or greater is required» (Windows)
 
-Пакеты `tgcrypto` и `aiohttp` требуют компиляции. Решения:
-1. Установите [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (компонент «Desktop development with C++»).
-2. Либо используйте **Python 3.11 или 3.12** — для них есть готовые wheels.
+Пакет `aiohttp` (если pip решил собрать его из исходников) требует компиляции. Решения:
+1. Используйте **Python 3.12** — для него есть готовые wheels `aiohttp` (версия 3.9.1+).
+2. Либо установите [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (компонент «Desktop development with C++»).
+
+> `tgcrypto` исключён из обязательных зависимостей — он не имеет wheels для Windows.
+> Hikka работает без него. На Linux: `pip install tgcrypto`.
 
 ### «You attempted to run Hikka on behalf of root user»
 
