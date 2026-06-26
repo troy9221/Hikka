@@ -1,12 +1,12 @@
-<a href="https://deepsource.io/gh/hikariatama/Hikka/?ref=repository-badge"><img src="https://deepsource.io/gh/hikariatama/Hikka.svg/?label=active+issues&show_trend=true&token=IPVI_QX-cSuQSVeVl8cb5PLt" alt="DeepSource"></a>
-<a href="https://deepsource.io/gh/hikariatama/Hikka/?ref=repository-badge"><img src="https://deepsource.io/gh/hikariatama/Hikka.svg/?label=resolved+issues&show_trend=true&token=IPVI_QX-cSuQSVeVl8cb5PLt" alt="DeepSource"></a><br>
-<a href="https://www.codacy.com/gh/hikariatama/Hikka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hikariatama/Hikka&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/97e3ea868f9344a5aa6e4d874f83db14"/></a>
-<a href="#"><img src="https://img.shields.io/github/languages/code-size/hikariatama/Hikka"/></a>
-<a href="#"><img src="https://img.shields.io/github/issues-raw/hikariatama/Hikka"/></a>
-<a href="#"><img src="https://img.shields.io/github/license/hikariatama/Hikka"/></a>
-<a href="#"><img src="https://img.shields.io/github/commit-activity/m/hikariatama/Hikka"/></a><br>
-<a href="#"><img src="https://img.shields.io/github/forks/hikariatama/Hikka?style=flat"/></a>
-<a href="#"><img src="https://img.shields.io/github/stars/hikariatama/Hikka"/></a>&nbsp;<a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a><br>
+<a href="https://deepsource.io/gh/troy9221/Hikka/?ref=repository-badge"><img src="https://deepsource.io/gh/troy9221/Hikka.svg/?label=active+issues&show_trend=true&token=IPVI_QX-cSuQSVeVl8cb5PLt" alt="DeepSource"></a>
+<a href="https://deepsource.io/gh/troy9221/Hikka/?ref=repository-badge"><img src="https://deepsource.io/gh/troy9221/Hikka.svg/?label=resolved+issues&show_trend=true&token=IPVI_QX-cSuQSVeVl8cb5PLt" alt="DeepSource"></a><br>
+<a href="https://www.codacy.com/gh/troy9221/Hikka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=troy9221/Hikka&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/97e3ea868f9344a5aa6e4d874f83db14"/></a>
+<a href="#"><img src="https://img.shields.io/github/languages/code-size/troy9221/Hikka"/></a>
+<a href="#"><img src="https://img.shields.io/github/issues-raw/troy9221/Hikka"/></a>
+<a href="#"><img src="https://img.shields.io/github/license/troy9221/Hikka"/></a>
+<a href="#"><img src="https://img.shields.io/github/commit-activity/m/troy9221/Hikka"/></a><br>
+<a href="#"><img src="https://img.shields.io/github/forks/troy9221/Hikka?style=flat"/></a>
+<a href="#"><img src="https://img.shields.io/github/stars/troy9221/Hikka"/></a>&nbsp;<a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a><br>
 
 <hr>
 
@@ -30,7 +30,7 @@ Simply run this command out of <b>root</b> and follow the instructions of instal
 <code>. <(wget -qO- https://hikariatama.ru/get_hikka)</code><br>
 <br>
 <b>Manual installation (no script):</b><br>
-<code>apt update && apt install git libcairo2 -y && git clone https://github.com/hikariatama/Hikka && cd Hikka && pip install -r requirements.txt && python3 -m hikka</code><br.>
+<code>apt update && apt install git libcairo2 -y && git clone https://github.com/troy9221/Hikka && cd Hikka && pip install -r requirements.txt && python3 -m hikka</code><br.>
 <i>If you are on VPS\VDS, type <code>--proxy-pass</code> in the end of command to open SSH tunnel to your Hikka web interface, or use <code>--no-web</code> to complete setup in console</i><br>
 <br>
 <b>Some further details:</b>
