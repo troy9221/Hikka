@@ -8,6 +8,8 @@ import logging
 import os
 from random import choice
 
+from aiogram.types import LinkPreviewOptions
+
 from .. import loader, translations, utils
 from ..inline.types import BotInlineCall
 
@@ -67,7 +69,7 @@ class Quickstart(loader.Module):
             self._client.tg_id,
             self.text(),
             reply_markup=self.inline.generate_markup(self.mark()),
-            disable_web_page_preview=True,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
 
         self.set("no_msg", True)

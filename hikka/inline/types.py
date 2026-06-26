@@ -113,8 +113,8 @@ class BotInlineMessage:
         )
 
 
-class InlineCall(CallbackQuery, InlineMessage):
-    """Modified version of classic aiogram `CallbackQuery`"""
+class InlineCall(InlineMessage):
+    """Wrapper around aiogram 3.x `CallbackQuery` for inline messages"""
 
     def __init__(
         self,
@@ -122,18 +122,14 @@ class InlineCall(CallbackQuery, InlineMessage):
         inline_manager: "InlineManager",  # type: ignore  # noqa: F821
         unit_id: str,
     ):
-        CallbackQuery.__init__(self)
-
-        for attr in {
-            "id",
-            "from_user",
-            "message",
-            "inline_message_id",
-            "chat_instance",
-            "data",
-            "game_short_name",
-        }:
-            setattr(self, attr, getattr(call, attr, None))
+        # Copy attributes from the original callback query
+        self.id = getattr(call, "id", None)
+        self.from_user = getattr(call, "from_user", None)
+        self.message = getattr(call, "message", None)
+        self.inline_message_id = getattr(call, "inline_message_id", None)
+        self.chat_instance = getattr(call, "chat_instance", None)
+        self.data = getattr(call, "data", None)
+        self.game_short_name = getattr(call, "game_short_name", None)
 
         self.original_call = call
 
@@ -141,12 +137,16 @@ class InlineCall(CallbackQuery, InlineMessage):
             self,
             inline_manager,
             unit_id,
-            call.inline_message_id,
+            getattr(call, "inline_message_id", None),
         )
 
+    async def answer(self, *args, **kwargs):
+        """Proxy to original callback query answer"""
+        return await self.original_call.answer(*args, **kwargs)
 
-class BotInlineCall(CallbackQuery, BotInlineMessage):
-    """Modified version of classic aiogram `CallbackQuery`"""
+
+class BotInlineCall(BotInlineMessage):
+    """Wrapper around aiogram 3.x `CallbackQuery` for bot messages"""
 
     def __init__(
         self,
@@ -154,18 +154,14 @@ class BotInlineCall(CallbackQuery, BotInlineMessage):
         inline_manager: "InlineManager",  # type: ignore  # noqa: F821
         unit_id: str,
     ):
-        CallbackQuery.__init__(self)
-
-        for attr in {
-            "id",
-            "from_user",
-            "message",
-            "chat",
-            "chat_instance",
-            "data",
-            "game_short_name",
-        }:
-            setattr(self, attr, getattr(call, attr, None))
+        # Copy attributes from the original callback query
+        self.id = getattr(call, "id", None)
+        self.from_user = getattr(call, "from_user", None)
+        self.message = getattr(call, "message", None)
+        self.chat = getattr(call.message, "chat", None) if call.message else None
+        self.chat_instance = getattr(call, "chat_instance", None)
+        self.data = getattr(call, "data", None)
+        self.game_short_name = getattr(call, "game_short_name", None)
 
         self.original_call = call
 
@@ -173,9 +169,13 @@ class BotInlineCall(CallbackQuery, BotInlineMessage):
             self,
             inline_manager,
             unit_id,
-            call.message.chat.id,
-            call.message.message_id,
+            call.message.chat.id if call.message else None,
+            call.message.message_id if call.message else None,
         )
+
+    async def answer(self, *args, **kwargs):
+        """Proxy to original callback query answer"""
+        return await self.original_call.answer(*args, **kwargs)
 
 
 class InlineUnit:
@@ -185,21 +185,23 @@ class InlineUnit:
         """Made just for type specification"""
 
 
-class BotMessage(AiogramMessage):
-    """Modified version of original Aiogram Message"""
+class BotMessage:
+    """Wrapper around aiogram 3.x Message"""
 
     def __init__(self):
-        super().__init__()
+        pass
 
 
-class InlineQuery(AiogramInlineQuery):
-    """Modified version of original Aiogram InlineQuery"""
+class InlineQuery:
+    """Wrapper around aiogram 3.x InlineQuery"""
 
     def __init__(self, inline_query: AiogramInlineQuery):
-        super().__init__(self)
-
-        for attr in {"id", "from_user", "query", "offset", "chat_type", "location"}:
-            setattr(self, attr, getattr(inline_query, attr, None))
+        self.id = getattr(inline_query, "id", None)
+        self.from_user = getattr(inline_query, "from_user", None)
+        self.query = getattr(inline_query, "query", None)
+        self.offset = getattr(inline_query, "offset", None)
+        self.chat_type = getattr(inline_query, "chat_type", None)
+        self.location = getattr(inline_query, "location", None)
 
         self.inline_query = inline_query
         self.args = (
@@ -207,6 +209,10 @@ class InlineQuery(AiogramInlineQuery):
             if len(self.inline_query.query.split()) > 1
             else ""
         )
+
+    async def answer(self, results, *args, **kwargs):
+        """Proxy to original inline query answer"""
+        return await self.inline_query.answer(results, *args, **kwargs)
 
     @staticmethod
     def _get_res(title: str, description: str, thumb_url: str) -> list:
@@ -216,12 +222,12 @@ class InlineQuery(AiogramInlineQuery):
                 title=title,
                 description=description,
                 input_message_content=InputTextMessageContent(
-                    "😶‍🌫️ <i>There is nothing here...</i>",
+                    message_text="😶‍🌫️ <i>There is nothing here...</i>",
                     parse_mode="HTML",
                 ),
-                thumb_url=thumb_url,
-                thumb_width=128,
-                thumb_height=128,
+                thumbnail_url=thumb_url,
+                thumbnail_width=128,
+                thumbnail_height=128,
             )
         ]
 

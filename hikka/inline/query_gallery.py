@@ -9,7 +9,12 @@ import logging
 import time
 import typing
 
-from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
+from aiogram.types import (
+    InlineQuery,
+    InlineQueryResultArticle,
+    InputTextMessageContent,
+    LinkPreviewOptions,
+)
 
 from .. import utils
 from .types import InlineUnit
@@ -137,13 +142,15 @@ class QueryGallery(InlineUnit):
                     title=i["title"],
                     description=i["description"],
                     input_message_content=InputTextMessageContent(
-                        f"🌘 <b>Opening gallery...</b>\n<i>#id: {id_}</i>",
-                        "HTML",
-                        disable_web_page_preview=True,
+                        message_text=(
+                            f"🌘 <b>Opening gallery...</b>\n<i>#id: {id_}</i>"
+                        ),
+                        parse_mode="HTML",
+                        link_preview_options=LinkPreviewOptions(is_disabled=True),
                     ),
-                    thumb_url=photo_url,
-                    thumb_width=128,
-                    thumb_height=128,
+                    thumbnail_url=photo_url,
+                    thumbnail_width=128,
+                    thumbnail_height=128,
                 )
             ]
 

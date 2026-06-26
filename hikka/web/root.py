@@ -17,7 +17,11 @@ import time
 
 import aiohttp_jinja2
 import requests
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    LinkPreviewOptions,
+)
 from aiohttp import web
 from hikkatl.errors import (
     FloodWaitError,
@@ -476,12 +480,15 @@ class Web:
 
         token = utils.rand(8)
 
-        markup = InlineKeyboardMarkup()
-        markup.add(
-            InlineKeyboardButton(
-                "🔓 Authorize user",
-                callback_data=f"authorize_web_{token}",
-            )
+        markup = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="🔓 Authorize user",
+                        callback_data=f"authorize_web_{token}",
+                    )
+                ]
+            ]
         )
 
         ips = request.headers.get("X-FORWARDED-FOR", None) or request.remote
@@ -540,7 +547,7 @@ class Web:
                         " interface, <b>do not click the button below</b>, as it might"
                         " give the user on the other end the access to your account!"
                     ),
-                    disable_web_page_preview=True,
+                    link_preview_options=LinkPreviewOptions(is_disabled=True),
                     reply_markup=markup,
                 )
                 ops += [

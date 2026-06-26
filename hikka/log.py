@@ -18,7 +18,7 @@ import typing
 from logging.handlers import RotatingFileHandler
 
 import hikkatl
-from aiogram.utils.exceptions import NetworkError
+from aiogram.exceptions import TelegramNetworkError as NetworkError
 
 from . import utils
 from .tl_cache import CustomTelegramClient
