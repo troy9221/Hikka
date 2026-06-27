@@ -214,10 +214,25 @@ class Utils(InlineUnit):
     generate_markup = _generate_markup
 
     async def _close_unit_handler(self, call: InlineCall):
-        await call.delete()
+        logger.debug(
+            "Close unit handler called, unit_id=%s, inline_message_id=%s",
+            getattr(call, "unit_id", None),
+            getattr(call, "inline_message_id", None),
+        )
+        try:
+            await call.delete()
+        except Exception:
+            logger.exception("Failed to delete unit in close handler")
 
     async def _unload_unit_handler(self, call: InlineCall):
-        await call.unload()
+        logger.debug(
+            "Unload unit handler called, unit_id=%s",
+            getattr(call, "unit_id", None),
+        )
+        try:
+            await call.unload()
+        except Exception:
+            logger.exception("Failed to unload unit in unload handler")
 
     async def _answer_unit_handler(self, call: InlineCall, text: str, show_alert: bool):
         await call.answer(text, show_alert=show_alert)
@@ -553,6 +568,15 @@ class Utils(InlineUnit):
         message_id: typing.Optional[int] = None,
     ) -> bool:
         """Params `self`, `unit_id` are for internal use only, do not try to pass them"""
+        logger.debug(
+            "_delete_unit_message: unit_id=%s, chat_id=%s, message_id=%s, "
+            "call.message=%s",
+            unit_id,
+            chat_id,
+            message_id,
+            getattr(call, "message", None),
+        )
+
         if getattr(getattr(call, "message", None), "chat", None):
             try:
                 await self.bot.delete_message(
@@ -560,6 +584,11 @@ class Utils(InlineUnit):
                     message_id=call.message.message_id,
                 )
             except Exception:
+                logger.exception(
+                    "Failed to delete bot message (chat_id=%s, message_id=%s)",
+                    call.message.chat.id,
+                    call.message.message_id,
+                )
                 return False
 
             return True
@@ -568,6 +597,11 @@ class Utils(InlineUnit):
             try:
                 await self.bot.delete_message(chat_id=chat_id, message_id=message_id)
             except Exception:
+                logger.exception(
+                    "Failed to delete message (chat_id=%s, message_id=%s)",
+                    chat_id,
+                    message_id,
+                )
                 return False
 
             return True
@@ -575,14 +609,30 @@ class Utils(InlineUnit):
         if not unit_id and hasattr(call, "unit_id") and call.unit_id:
             unit_id = call.unit_id
 
-        try:
-            message_id, peer, _, _ = resolve_inline_message_id(
-                self._units[unit_id]["inline_message_id"]
+        if not unit_id or unit_id not in self._units:
+            logger.warning(
+                "Can't delete unit: unit_id=%s not found in _units (keys=%s)",
+                unit_id,
+                list(self._units.keys()),
             )
+            return False
+
+        try:
+            inline_msg_id = self._units[unit_id].get("inline_message_id")
+
+            if not inline_msg_id:
+                logger.warning(
+                    "Can't delete unit %s: no inline_message_id stored",
+                    unit_id,
+                )
+                return False
+
+            message_id, peer, _, _ = resolve_inline_message_id(inline_msg_id)
 
             await self._client.delete_messages(peer, [message_id])
             await self._unload_unit(unit_id)
         except Exception:
+            logger.exception("Failed to delete inline message (unit_id=%s)", unit_id)
             return False
 
         return True
