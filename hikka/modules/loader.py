@@ -230,15 +230,24 @@ class LoaderMod(loader.Module):
         if self._links_cache.get(repo, {}).get("exp", 0) >= time.time():
             return self._links_cache[repo]["data"]
 
-        res = await utils.run_sync(
-            requests.get,
-            f"{repo}/full.txt",
-            auth=(
-                tuple(self.config["basic_auth"].split(":", 1))
-                if self.config["basic_auth"]
-                else None
-            ),
-        )
+        try:
+            res = await utils.run_sync(
+                requests.get,
+                f"{repo}/full.txt",
+                auth=(
+                    tuple(self.config["basic_auth"].split(":", 1))
+                    if self.config["basic_auth"]
+                    else None
+                ),
+                timeout=15,
+            )
+        except Exception:
+            logger.warning(
+                "Can't load repo %s contents because of network error",
+                repo,
+                exc_info=True,
+            )
+            return []
 
         if not str(res.status_code).startswith("2"):
             logger.debug(
