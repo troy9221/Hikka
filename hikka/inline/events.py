@@ -283,14 +283,33 @@ class Events(InlineUnit):
                         return
 
                     try:
+                        _args = button.get("args", [])
+                        _kwargs = button.get("kwargs", {})
+
+                        if not isinstance(_args, (list, tuple)):
+                            logger.error(
+                                "Button %s has invalid `args` (%s), expected list/tuple",
+                                button.get("_callback_data"),
+                                type(_args),
+                            )
+                            _args = []
+
+                        if not isinstance(_kwargs, dict):
+                            logger.error(
+                                "Button %s has invalid `kwargs` (%s), expected dict",
+                                button.get("_callback_data"),
+                                type(_kwargs),
+                            )
+                            _kwargs = {}
+
                         result = await button["callback"](
                             (
                                 BotInlineCall
                                 if getattr(getattr(call, "message", None), "chat", None)
                                 else InlineCall
                             )(call, self, unit_id),
-                            *button.get("args", []),
-                            **button.get("kwargs", {}),
+                            *_args,
+                            **_kwargs,
                         )
                     except Exception:
                         logger.exception("Error on running callback watcher!")
@@ -334,14 +353,34 @@ class Events(InlineUnit):
                 await call.answer(self.translator.getkey("inline.button403"))
                 return
 
-            await self._custom_map[call.data]["handler"](
+            _custom = self._custom_map[call.data]
+            _args = _custom.get("args", [])
+            _kwargs = _custom.get("kwargs", {})
+
+            if not isinstance(_args, (list, tuple)):
+                logger.error(
+                    "Custom button %s has invalid `args` (%s), expected list/tuple",
+                    call.data,
+                    type(_args),
+                )
+                _args = []
+
+            if not isinstance(_kwargs, dict):
+                logger.error(
+                    "Custom button %s has invalid `kwargs` (%s), expected dict",
+                    call.data,
+                    type(_kwargs),
+                )
+                _kwargs = {}
+
+            await _custom["handler"](
                 (
                     BotInlineCall
                     if getattr(getattr(call, "message", None), "chat", None)
                     else InlineCall
                 )(call, self, None),
-                *self._custom_map[call.data].get("args", []),
-                **self._custom_map[call.data].get("kwargs", {}),
+                *_args,
+                **_kwargs,
             )
             return
 
@@ -378,11 +417,30 @@ class Events(InlineUnit):
                     query = query.split(maxsplit=1)[1] if len(query.split()) > 1 else ""
 
                     try:
+                        _args = button.get("args", [])
+                        _kwargs = button.get("kwargs", {})
+
+                        if not isinstance(_args, (list, tuple)):
+                            logger.error(
+                                "Button %s has invalid `args` (%s), expected list/tuple",
+                                button.get("_switch_query"),
+                                type(_args),
+                            )
+                            _args = []
+
+                        if not isinstance(_kwargs, dict):
+                            logger.error(
+                                "Button %s has invalid `kwargs` (%s), expected dict",
+                                button.get("_switch_query"),
+                                type(_kwargs),
+                            )
+                            _kwargs = {}
+
                         return await button["handler"](
                             InlineCall(chosen_inline_query, self, unit_id),
                             query,
-                            *button.get("args", []),
-                            **button.get("kwargs", {}),
+                            *_args,
+                            **_kwargs,
                         )
                     except Exception:
                         logger.exception(
