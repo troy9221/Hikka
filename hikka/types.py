@@ -480,9 +480,13 @@ class Module:
         if not utils.check_url(url):
             _raise(ValueError("Invalid url for library"))
 
-        code = await utils.run_sync(requests.get, url)
-        code.raise_for_status()
-        code = code.text
+        try:
+            code = await utils.run_sync(requests.get, url, timeout=15)
+            code.raise_for_status()
+            code = code.text
+        except Exception as e:
+            _raise(e)
+            return
 
         if re.search(r"# ?scope: ?hikka_min", code):
             ver = tuple(

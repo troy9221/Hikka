@@ -649,12 +649,17 @@ async def set_avatar(
     :return: True if avatar was set, False otherwise
     """
     if isinstance(avatar, str) and check_url(avatar):
-        f = (
-            await run_sync(
-                requests.get,
-                avatar,
-            )
-        ).content
+        try:
+            f = (
+                await run_sync(
+                    requests.get,
+                    avatar,
+                    timeout=15,
+                )
+            ).content
+        except Exception:
+            logger.warning("Can't download avatar from %s", avatar, exc_info=True)
+            return False
     elif isinstance(avatar, bytes):
         f = avatar
     else:
