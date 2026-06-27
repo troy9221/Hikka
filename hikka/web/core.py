@@ -109,7 +109,24 @@ class Web(root.Web):
         await self.runner.setup()
         self.port = os.environ.get("PORT", port)
         site = web.TCPSite(self.runner, None, self.port)
-        await site.start()
+
+        try:
+            await site.start()
+        except OSError as e:
+            if e.errno == 98:  # Address already in use
+                logger.error(
+                    "Port %s is already in use. Probably, another Hikka instance"
+                    " is still running. Kill it with: fuser -k %s/tcp or"
+                    " lsof -t -i:%s | xargs kill",
+                    self.port,
+                    self.port,
+                    self.port,
+                )
+            else:
+                logger.error("Can't start web server on port %s: %s", self.port, e)
+
+            await self.runner.cleanup()
+            raise
 
         await self.get_url(proxy_pass)
 

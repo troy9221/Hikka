@@ -627,7 +627,34 @@ class Utils(InlineUnit):
                 )
                 return False
 
+            logger.debug(
+                "Resolving inline_message_id=%r (type=%s) for unit %s",
+                inline_msg_id,
+                type(inline_msg_id),
+                unit_id,
+            )
+
             message_id, peer, _, _ = resolve_inline_message_id(inline_msg_id)
+
+            if message_id is None:
+                logger.warning(
+                    "resolve_inline_message_id returned message_id=None for"
+                    " inline_message_id=%r. Falling back to bot API edit.",
+                    inline_msg_id,
+                )
+
+                # Fallback: edit the inline message via bot API to remove
+                # buttons and show "closed" text, since we can't delete it
+                # through Telethon without a valid message_id
+                with contextlib.suppress(Exception):
+                    await self.bot.edit_message_text(
+                        inline_message_id=inline_msg_id,
+                        text="🔻",
+                        reply_markup=None,
+                    )
+
+                await self._unload_unit(unit_id)
+                return True
 
             await self._client.delete_messages(peer, [message_id])
             await self._unload_unit(unit_id)
