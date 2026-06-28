@@ -240,11 +240,12 @@ class LoaderMod(loader.Module):
                 ),
                 timeout=15,
             )
-        except Exception:
+        except Exception as e:
             logger.warning(
-                "Can't load repo %s contents because of network error",
+                "Can't load repo %s contents because of network error: %s: %s",
                 repo,
-                exc_info=True,
+                type(e).__name__,
+                e,
             )
             return []
 

@@ -637,15 +637,17 @@ class Utils(InlineUnit):
             message_id, peer, _, _ = resolve_inline_message_id(inline_msg_id)
 
             if message_id is None:
-                logger.warning(
-                    "resolve_inline_message_id returned message_id=None for"
-                    " inline_message_id=%r. Falling back to bot API edit.",
+                # Inline messages in Telegram don't have a real message_id,
+                # so resolve_inline_message_id returns None for them. This is
+                # expected behaviour, not an error. The only way to "close" an
+                # inline message is to edit it via bot API (remove buttons and
+                # replace text), since it can't be deleted through Telethon.
+                logger.debug(
+                    "inline_message_id=%r has no real message_id (inline message)."
+                    " Editing via bot API to close.",
                     inline_msg_id,
                 )
 
-                # Fallback: edit the inline message via bot API to remove
-                # buttons and show "closed" text, since we can't delete it
-                # through Telethon without a valid message_id
                 with contextlib.suppress(Exception):
                     await self.bot.edit_message_text(
                         inline_message_id=inline_msg_id,

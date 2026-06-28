@@ -657,8 +657,13 @@ async def set_avatar(
                     timeout=15,
                 )
             ).content
-        except Exception:
-            logger.warning("Can't download avatar from %s", avatar, exc_info=True)
+        except Exception as e:
+            logger.warning(
+                "Can't download avatar from %s: %s: %s",
+                avatar,
+                type(e).__name__,
+                e,
+            )
             return False
     elif isinstance(avatar, bytes):
         f = avatar
