@@ -410,6 +410,23 @@ python3 -m hikka
 
 ## 12. Решение проблем
 
+### «ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'»
+
+Команда `pip install -r requirements.txt` запущена не из директории репозитория. Сначала перейдите в папку с клонированным репозиторием:
+
+```bash
+cd Hikka
+pip install -r requirements.txt
+```
+
+Если репозиторий ещё не клонирован — клонируйте его:
+
+```bash
+git clone https://github.com/troy9221/Hikka
+cd Hikka
+pip install -r requirements.txt
+```
+
 ### «Microsoft Visual C++ 14.0 or greater is required» (Windows)
 
 Пакет `aiohttp` (если pip решил собрать его из исходников) требует компиляции. Решения:
@@ -451,6 +468,23 @@ py -m hikka
 ```bash
 rm hikka-*.session
 python3 -m hikka
+```
+
+### «Address already in use» / порт занят
+
+Другой процесс Hikka уже запущен и занимает порт web-сервера. Найдите и завершите его:
+
+```bash
+# Linux — найти процесс, занимающий порт
+fuser -k 49982/tcp
+# или
+lsof -t -i:49982 | xargs kill
+```
+
+```bat
+:: Windows — найти процесс по порту
+netstat -ano | findstr :49982
+taskkill /PID <найденный_PID> /F
 ```
 
 ### FloodWait / временная блокировка
