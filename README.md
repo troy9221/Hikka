@@ -27,7 +27,7 @@
 
 <h2>Локальная установка:</h2>
 Просто выполните эту команду из-под <b>root</b> и следуйте инструкциям установщика:<br>
-<code>(wget -qO- https://hikariatama.ru/get_hikka)</code><br>
+<code>wget -qO- https://hikariatama.ru/get_hikka</code><br>
 <br>
 <b>Ручная установка (без скрипта):</b><br>
 <code>apt update && apt install git libcairo2 -y && git clone https://github.com/troy9221/Hikka && cd Hikka && pip install -r requirements.txt && python3 -m hikka</code><br.>
