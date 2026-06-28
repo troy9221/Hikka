@@ -26,12 +26,10 @@
 <a href="https://t.me/lavhostbot?start=SGlra2E"><img src="https://user-images.githubusercontent.com/36935426/167272288-85f00779-4b98-47da-8d0d-ea2c6370b979.png" height="40"></a>
 
 <h2>Локальная установка:</h2>
-Просто выполните эту команду из-под <b>root</b> и следуйте инструкциям установщика:<br>
-<code>. <(wget -qO- https://hikariatama.ru/get_hikka)</code><br>
-<br>
-<b>Ручная установка (без скрипта):</b><br>
-<code>apt update && apt install git libcairo2 -y && git clone https://github.com/troy9221/Hikka && cd Hikka && pip install -r requirements.txt && python3 -m hikka</code><br.>
+<b>Ручная установка (Ubuntu/Debian):</b><br>
+<code>apt update && apt install git libcairo2 software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt update && apt install python3.12 python3.12-venv -y && git clone https://github.com/troy9221/Hikka && cd Hikka && python3.12 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python -m hikka</code><br>
 <i>Если вы на VPS\VDS, добавьте <code>--proxy-pass</code> в конец команды, чтобы открыть SSH-туннель к web-интерфейсу Hikka, или используйте <code>--no-web</code> для завершения настройки в консоли</i><br>
+<i>Подробная инструкция (включая Windows, Termux и настройку автозапуска через systemd) — в <a href="https://github.com/troy9221/Hikka/blob/master/MANUAL.md">MANUAL.md</a></i><br>
 <br>
 <b>Дополнительные подробности:</b>
 
@@ -60,13 +58,13 @@
 <hr>
 <h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/1312-micro-sd-card-flat.webp" height="54" align="middle"> Требования</h2>
 <ul>
- <li>Python 3.8+</li>
+ <li>Python 3.12 (рекомендуется). Не используйте Python 3.13</li>
  <li>API_ID и HASH от <a href="https://my.telegram.org/apps" color="#2594cb">Telegram</a></li>
 </ul>
 <hr>
 <h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/680-it-developer-flat.webp" height="54" align="middle"> Документация</h2>
 
-Ознакомьтесь с <a href="https://dev.hikka.pw">dev.hikka.pw</a> для документации разработчиков и <a href="https://hikka.pw">hikka.pw</a> для документации пользователей<br>
+Подробное руководство по установке, настройке и использованию — <a href="https://github.com/troy9221/Hikka/blob/master/MANUAL.md">MANUAL.md</a><br>
 
 <hr>
 <h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/981-consultation-flat.webp" height="54" align="middle"> <a href="https://t.me/hikka_talks">Поддержка</a></h2>

@@ -66,34 +66,90 @@ sudo apt install -y git python3 python3-pip python3-venv libcairo2
 
 ## 3. Установка на Linux / VPS / Termux
 
-### Вариант A — Установочный скрипт (рекомендуется)
+### Установка на Ubuntu / Debian
 
-```bash
-(wget -qO- https://github.com/troy9221/Hikka/raw/master/install.sh)
-```
-
-Скрипт сам определит ОС, установит зависимости и запустит Hikka.
-
-### Вариант B — Ручная установка
+> ⚠️ **Важно:** Hikka требует **Python 3.12**. На Ubuntu 22.04 в репозиториях
+> по умолчанию Python 3.10, поэтому нужно установить Python 3.12 через PPA.
 
 ```bash
 # 1. Установить системные зависимости
 sudo apt update
-sudo apt install -y git python3 python3-pip python3-venv libcairo2
+sudo apt install -y git curl wget libcairo2 software-properties-common
 
-# 2. Клонировать репозиторий
+# 2. Установить Python 3.12 (через PPA deadsnakes)
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt update
+sudo apt install -y python3.12 python3.12-venv python3.12-dev
+
+# Проверить версию
+python3.12 --version
+# Должно вывести: Python 3.12.x
+
+# 3. Клонировать репозиторий
 git clone https://github.com/troy9221/Hikka
 cd Hikka
 
-# 3. (Рекомендуется) Создать виртуальное окружение
-python3 -m venv venv
+# 4. Создать виртуальное окружение на Python 3.12
+python3.12 -m venv venv
 source venv/bin/activate
 
-# 4. Установить Python-зависимости
+# 5. Установить Python-зависимости
+pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Запустить Hikka
-python3 -m hikka
+# 6. Запустить Hikka
+python -m hikka
+```
+
+> Не устанавливайте лишние пакеты (`gdown`, `Pillow`, `deep-translator` и т.д.)
+> без необходимости. Если сторонний модуль потребует дополнительный пакет,
+> Hikka предложит установить его автоматически при загрузке модуля.
+
+### Запуск на VPS с автозапуском (systemd)
+
+После первичной настройки (через web-интерфейс или `--no-web`) можно
+настроить автозапуск через systemd:
+
+```bash
+# Создать скрипт-обёртку
+sudo tee /usr/local/bin/hikka-wrapper.sh > /dev/null << 'EOF'
+#!/bin/bash
+set -e
+cd /home/USER/Hikka
+git pull >> /tmp/hikka-update.log 2>&1
+source venv/bin/activate
+pip install -r requirements.txt >> /tmp/hikka-update.log 2>&1
+exec /home/USER/Hikka/venv/bin/python -m hikka --no-web
+EOF
+sudo chmod +x /usr/local/bin/hikka-wrapper.sh
+
+# Создать службу systemd
+sudo tee /etc/systemd/system/hikka.service > /dev/null << 'EOF'
+[Unit]
+Description=Hikka UserBot
+After=network.target
+
+[Service]
+Type=simple
+User=USER
+ExecStart=/usr/local/bin/hikka-wrapper.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Замените USER на ваше имя пользователя, затем:
+sudo systemctl daemon-reload
+sudo systemctl enable hikka
+sudo systemctl start hikka
+
+# Проверить статус
+sudo systemctl status hikka
+
+# Логи
+sudo journalctl -u hikka -f
 ```
 
 ### Termux (Android)
@@ -396,8 +452,11 @@ Hikka загрузит изменения из репозитория `https://g
 ```bash
 cd Hikka
 git pull
+
+# Если используется виртуальное окружение:
+source venv/bin/activate
 pip install -r requirements.txt
-python3 -m hikka
+python -m hikka
 ```
 
 ### Изменение источника обновлений
@@ -519,19 +578,23 @@ Telegram ограничивает частоту запросов. Подожд�
 ## Краткая шпаргалка
 
 ```bash
-# Установка (Linux)
+# Установка (Linux, Ubuntu/Debian)
+sudo add-apt-repository ppa:deadsnakes/ppa -y && sudo apt update
+sudo apt install -y python3.12 python3.12-venv git libcairo2
 git clone https://github.com/troy9221/Hikka && cd Hikka
+python3.12 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-python3 -m hikka
+python -m hikka
 
-# Запуск
-python3 -m hikka
+# Запуск (из директории Hikka, с активным venv)
+python -m hikka
 
 # Запуск без web (консольная настройка)
-python3 -m hikka --no-web
+python -m hikka --no-web
 
 # Запуск с пробросом порта (VPS)
-python3 -m hikka --proxy-pass
+python -m hikka --proxy-pass
 
 # Проверка работы (в любом чате Telegram)
 .ping
