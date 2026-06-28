@@ -87,11 +87,18 @@ class StringLoader(SourceLoader):
         return self.data.decode("utf-8")
 
     def get_code(self, fullname: str) -> bytes:
-        return (
-            compile(source, self.origin, "exec", dont_inherit=True)
-            if (source := self.get_data(fullname))
-            else None
-        )
+        if not (source := self.get_data(fullname)):
+            return None
+
+        # Third-party modules may contain invalid escape sequences (e.g. "\d"
+        # in regex strings) which raise SyntaxWarning on Python 3.12+ and will
+        # become SyntaxError in Python 3.15. Since we can't fix external code,
+        # suppress only this specific warning during compilation.
+        import warnings
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", SyntaxWarning)
+            return compile(source, self.origin, "exec", dont_inherit=True)
 
     def get_filename(self, *args, **kwargs) -> str:
         return self.origin
