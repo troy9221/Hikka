@@ -69,7 +69,7 @@ sudo apt install -y git python3 python3-pip python3-venv libcairo2
 ### Вариант A — Установочный скрипт (рекомендуется)
 
 ```bash
-(wget -qO- https://github.com/troy9221/Hikka/raw/master/install.sh)
+wget -qO- https://github.com/troy9221/Hikka/raw/master/install.sh
 ```
 
 Скрипт сам определит ОС, установит зависимости и запустит Hikka.
