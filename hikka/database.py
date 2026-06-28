@@ -223,7 +223,7 @@ class Database(dict):
             return True
 
         try:
-            self._db_file.write_text(json.dumps(self, indent=4))
+            self._db_file.write_text(json.dumps(self, indent=4, ensure_ascii=False), encoding="utf-8")
         except Exception:
             logger.exception("Database save failed!")
             return False

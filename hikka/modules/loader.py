@@ -70,7 +70,7 @@ class LoaderMod(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "MODULES_REPO",
-                "https://mods.hikariatama.ru",
+                "https://github.com/anon97945/hikka-mods/raw/master",
                 lambda: self.strings("repo_config_doc"),
                 validator=loader.validators.Link(),
             ),
@@ -81,6 +81,8 @@ class LoaderMod(loader.Module):
                     "https://github.com/hikariatama/host/raw/master",
                     "https://github.com/MoriSummerz/ftg-mods/raw/main",
                     "https://gitlab.com/CakesTwix/friendly-userbot-modules/-/raw/master",
+                    "https://github.com/Den4ikSuperOstryyPer4ik/Astro-modules/raw/main",
+                    "https://github.com/idiotcoders/idiotmodules/raw/main",
                 ],
                 lambda: self.strings("add_repo_config_doc"),
                 validator=loader.validators.Series(validator=loader.validators.Link()),
@@ -102,14 +104,11 @@ class LoaderMod(loader.Module):
 
     async def _async_init(self):
         modules = list(
-            filter(
-                lambda x: not x.startswith("https://mods.hikariatama.ru"),
-                utils.array_sum(
-                    map(
-                        lambda x: list(x.values()),
-                        (await self.get_repo_list()).values(),
-                    )
-                ),
+            utils.array_sum(
+                map(
+                    lambda x: list(x.values()),
+                    (await self.get_repo_list()).values(),
+                )
             )
         )
         logger.debug("Modules: %s", modules)

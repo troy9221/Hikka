@@ -197,7 +197,7 @@ def save_config_key(key: str, value: str) -> bool:
     # Assign config value
     config[key] = value
     # And save config
-    CONFIG_PATH.write_text(json.dumps(config, indent=4))
+    CONFIG_PATH.write_text(json.dumps(config, indent=4, ensure_ascii=False), encoding="utf-8")
     return True
 
 
