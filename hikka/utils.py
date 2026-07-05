@@ -630,8 +630,8 @@ def merge(a: dict, b: dict, /) -> dict:
                 b[key] = list(set(b[key] + a[key]))
             else:
                 b[key] = a[key]
-
-        b[key] = a[key]
+        else:
+            b[key] = a[key]
 
     return b
 

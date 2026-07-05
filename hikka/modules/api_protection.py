@@ -65,6 +65,12 @@ CONSTRUCTORS = {
 class APIRatelimiterMod(loader.Module):
     """Helps userbot avoid spamming Telegram API"""
 
+    # SECURITY INVARIANT: this module patches the client's low-level _call and
+    # exposes the web debugger PIN/URL. All commands here MUST stay owner-only
+    # (security.DEFAULT_PERMISSIONS == OWNER). NEVER add @loader.unrestricted or
+    # otherwise widen permissions — leaking the debugger PIN or disabling API
+    # protection from a non-owner would be a critical security hole.
+
     strings = {"name": "APILimiter"}
 
     def __init__(self):

@@ -122,7 +122,8 @@ class UpdaterMod(loader.Module):
         await self._db.remote_force_save()
 
         if "LAVHOST" in os.environ:
-            os.system("lavhost restart")
+            with contextlib.suppress(Exception):
+                subprocess.run(["lavhost", "restart"], check=False)
             return
 
         with contextlib.suppress(Exception):
@@ -224,7 +225,12 @@ class UpdaterMod(loader.Module):
     ):
         # We don't really care about asyncio at this point, as we are shutting down
         if hard:
-            os.system(f"cd {utils.get_base_dir()} && cd .. && git reset --hard HEAD")
+            with contextlib.suppress(Exception):
+                subprocess.run(
+                    ["git", "reset", "--hard", "HEAD"],
+                    cwd=os.path.dirname(utils.get_base_dir()),
+                    check=False,
+                )
 
         try:
             if "LAVHOST" in os.environ:
@@ -242,7 +248,8 @@ class UpdaterMod(loader.Module):
                     ),
                 )
                 await self.process_restart_message(msg_obj)
-                os.system("lavhost update")
+                with contextlib.suppress(Exception):
+                    subprocess.run(["lavhost", "update"], check=False)
                 return
 
             with contextlib.suppress(Exception):

@@ -9,7 +9,7 @@ import logging
 from aiogram.types import CallbackQuery
 from aiogram.types import InlineQuery as AiogramInlineQuery
 from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
-from aiogram.types import Message as AiogramMessage
+from aiogram.types import Message as AiogramMessage  # noqa: F401  # re-exported
 
 from .. import utils
 

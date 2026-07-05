@@ -297,6 +297,12 @@ class RawMessageEditor(SudoMessageEditor):
 class TerminalMod(loader.Module):
     """Runs commands"""
 
+    # SECURITY INVARIANT: this module executes arbitrary shell commands via
+    # asyncio.create_subprocess_shell. Every command here MUST stay owner-only
+    # (security.DEFAULT_PERMISSIONS == OWNER). NEVER add @loader.unrestricted or
+    # relax @loader.command permissions — doing so would grant shell access to
+    # other users. Do not add security decorators that widen the audience.
+
     strings = {"name": "Terminal"}
 
     def __init__(self):

@@ -22,6 +22,10 @@ from meval import meval
 from .. import loader, main, utils
 from ..log import HikkaException
 
+# Maximum time (in seconds) a user-provided program is allowed to compile/run
+# before it is forcibly terminated. Prevents a hang on infinite loops.
+EXEC_TIMEOUT = 30
+
 
 class Brainfuck:
     def __init__(self, memory_size: int = 30000):
@@ -52,29 +56,21 @@ class Brainfuck:
         line: typing.Optional[int] = None,
         column: typing.Optional[int] = None,
     ):
-        self.error = (
-            message + f" at line {line}, column {column}"
-            if line is not None and column is not None
-            else ""
-        )
+        if line is not None and column is not None:
+            self.error = f"{message} at line {line}, column {column}"
+        else:
+            self.error = message
 
     def _eval(self, source: str):
+        """Validate that all loop brackets are balanced (nesting allowed)."""
         line = col = 0
 
         stk = []
 
-        loop_open = False
-
         for c in source:
             if c == "[":
-                if loop_open:
-                    self._report_error("unexpected token '['", line, col)
-                    return True
-
-                loop_open = True
-                stk.append("[")
+                stk.append((line, col))
             elif c == "]":
-                loop_open = False
                 if len(stk) == 0:
                     self._report_error("unexpected token ']'", line, col)
                     return True
@@ -87,7 +83,8 @@ class Brainfuck:
             col += 1
 
         if len(stk) != 0:
-            self._report_error("unmatched brackets")
+            open_line, open_col = stk[-1]
+            self._report_error("unmatched brackets", open_line, open_col)
             return True
 
         return False
@@ -125,12 +122,24 @@ class Brainfuck:
                 self.out += chr(self.data[ptr])
             elif source[current] == "[":
                 if self.data[ptr] == 0:
-                    while source[current] != "]":
+                    # Jump forward to the matching "]", honoring nested loops
+                    depth = 1
+                    while depth > 0:
                         current += 1
+                        if source[current] == "[":
+                            depth += 1
+                        elif source[current] == "]":
+                            depth -= 1
             elif source[current] == "]":
                 if self.data[ptr] != 0:
-                    while source[current] != "[":
+                    # Jump back to the matching "[", honoring nested loops
+                    depth = 1
+                    while depth > 0:
                         current -= 1
+                        if source[current] == "]":
+                            depth += 1
+                        elif source[current] == "[":
+                            depth -= 1
             elif source[current] == "\n":
                 line += 1
                 col = -1
@@ -144,6 +153,16 @@ class Brainfuck:
 @loader.tds
 class Evaluator(loader.Module):
     """Evaluates code in various languages"""
+
+    # SECURITY INVARIANT:
+    # Every command below executes arbitrary code (Python via meval, or external
+    # compilers/interpreters via subprocess). None of them declare an explicit
+    # security decorator, so they inherit the framework default
+    # `security.DEFAULT_PERMISSIONS == OWNER` (see hikka/security.py). This means
+    # only the account owner may invoke them. Do NOT add `@loader.unrestricted`,
+    # `@loader.command(security=...)` widening, or any public-facing wrapper to
+    # these handlers — doing so would allow remote arbitrary code execution.
+    # External-language runners are additionally bounded by EXEC_TIMEOUT above.
 
     strings = {"name": "Evaluator"}
 
@@ -220,20 +239,28 @@ class Evaluator(loader.Module):
                     ["gcc" if c else "g++", "-o", "code", "code.cpp"],
                     cwd=tmpdir,
                     stderr=subprocess.STDOUT,
+                    timeout=EXEC_TIMEOUT,
                 ).decode()
             except subprocess.CalledProcessError as e:
                 result = e.output.decode()
                 error = True
+            except subprocess.TimeoutExpired:
+                result = self.strings("timeout").format(EXEC_TIMEOUT)
+                error = True
 
-            if not result:
+            if not result and not error:
                 try:
                     result = subprocess.check_output(
                         ["./code"],
                         cwd=tmpdir,
                         stderr=subprocess.STDOUT,
+                        timeout=EXEC_TIMEOUT,
                     ).decode()
                 except subprocess.CalledProcessError as e:
                     result = e.output.decode()
+                    error = True
+                except subprocess.TimeoutExpired:
+                    result = self.strings("timeout").format(EXEC_TIMEOUT)
                     error = True
 
         with contextlib.suppress(MessageIdInvalidError):
@@ -279,9 +306,13 @@ class Evaluator(loader.Module):
                     ["node", "code.js"],
                     cwd=tmpdir,
                     stderr=subprocess.STDOUT,
+                    timeout=EXEC_TIMEOUT,
                 ).decode()
             except subprocess.CalledProcessError as e:
                 result = e.output.decode()
+                error = True
+            except subprocess.TimeoutExpired:
+                result = self.strings("timeout").format(EXEC_TIMEOUT)
                 error = True
 
         with contextlib.suppress(MessageIdInvalidError):
@@ -323,9 +354,13 @@ class Evaluator(loader.Module):
                     ["php", "code.php"],
                     cwd=tmpdir,
                     stderr=subprocess.STDOUT,
+                    timeout=EXEC_TIMEOUT,
                 ).decode()
             except subprocess.CalledProcessError as e:
                 result = e.output.decode()
+                error = True
+            except subprocess.TimeoutExpired:
+                result = self.strings("timeout").format(EXEC_TIMEOUT)
                 error = True
 
         with contextlib.suppress(MessageIdInvalidError):
@@ -367,9 +402,13 @@ class Evaluator(loader.Module):
                     ["ruby", "code.rb"],
                     cwd=tmpdir,
                     stderr=subprocess.STDOUT,
+                    timeout=EXEC_TIMEOUT,
                 ).decode()
             except subprocess.CalledProcessError as e:
                 result = e.output.decode()
+                error = True
+            except subprocess.TimeoutExpired:
+                result = self.strings("timeout").format(EXEC_TIMEOUT)
                 error = True
 
         with contextlib.suppress(MessageIdInvalidError):

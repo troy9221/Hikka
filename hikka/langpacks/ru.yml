@@ -435,6 +435,10 @@ hikka_info:
     _cmd_doc_hikkainfo: "Отправить информацию по типу 'Что такое Хикка?'"
     _cmd_doc_info: "Отправляет информацию о боте"
     _cmd_doc_setinfo: "<текст> - Изменить текст в .info"
+    diag_redis_on: "🟢 Подключён"
+    diag_redis_off: "⚪️ Не используется"
+    diag: "<emoji document_id=5431449001532594346>⚡️</emoji> <b>Диагностика Hikka</b>\n\n<b>🌘 Версия:</b> <code>{version}</code> (<code>{branch}</code>)\n<b>⏱ Аптайм:</b> {uptime}\n<b>💻 CPU:</b> <i>~{cpu} %</i>\n<b>🧠 RAM:</b> <i>~{ram} MB</i>\n<b>🗄 Redis:</b> {redis}\n<b>💾 Размер БД:</b> <code>{db_size}</code>\n<b>🧩 Модулей:</b> <code>{modules}</code>\n<b>🖥 Платформа:</b> {platform}"
+    _cmd_doc_diag: "Показать диагностику состояния юзербота"
 
 loader:
     repo_config_doc: "Ссылка для загрузки модулей"
@@ -522,6 +526,7 @@ eval:
     _cls_doc: "Выполняет код на различных языках программирования"
     compiling: "<emoji document_id=5325787248363314644>🫥</emoji> <b>Компиляция кода...</b>"
     no_compiler: "<emoji document_id={}>💻</emoji> <b>Компилятор {} не установлен на системе.</b>"
+    timeout: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Выполнение прервано по таймауту через {} секунд.</b>"
     _cmd_doc_e: "Выполняет Python код"
     _cmd_doc_ebf: "Выполняет Brainf*ck код"
     _cmd_doc_ec: "Выполняет C код"

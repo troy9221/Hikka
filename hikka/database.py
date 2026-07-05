@@ -6,6 +6,7 @@
 
 import asyncio
 import collections
+import contextlib
 import json
 import logging
 import os
@@ -99,9 +100,15 @@ class Database(dict):
         if REDIS_URI := (
             os.environ.get("REDIS_URL") or main.get_config_key("redis_uri")
         ):
-            self._redis = redis.Redis.from_url(REDIS_URI)
-        else:
-            return False
+            try:
+                self._redis = redis.Redis.from_url(REDIS_URI)
+            except Exception:
+                logger.exception("Failed to initialize Redis connection")
+                return False
+
+            return True
+
+        return False
 
     async def init(self):
         """Asynchronous initialization unit"""
@@ -223,9 +230,26 @@ class Database(dict):
             return True
 
         try:
-            self._db_file.write_text(json.dumps(self, indent=4, ensure_ascii=False), encoding="utf-8")
+            # Атомарная запись: сначала пишем во временный файл рядом с целевым
+            # (обязательно в том же каталоге — чтобы os.replace выполнялся в
+            # пределах одной ФС и был атомарным), затем атомарно подменяем.
+            # Это защищает БД от повреждения, если процесс будет убит (OOM,
+            # рестарт хостинга, пропадание питания) в момент записи: целевой
+            # файл либо остаётся старым валидным, либо становится новым валидным,
+            # но никогда — наполовину записанным.
+            tmp_file = self._db_file.with_suffix(
+                f"{self._db_file.suffix}.tmp-{os.getpid()}"
+            )
+            tmp_file.write_text(
+                json.dumps(self, indent=4, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            os.replace(tmp_file, self._db_file)
         except Exception:
             logger.exception("Database save failed!")
+            with contextlib.suppress(Exception):
+                if tmp_file.exists():
+                    tmp_file.unlink()
             return False
 
         return True

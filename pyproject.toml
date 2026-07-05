@@ -1,3 +1,47 @@
 [tool.black]
 extend-exclude = "loaded_modules"
 preview = true
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+extend-exclude = ["loaded_modules", "hikka/qr.py"]
+
+[tool.ruff.lint]
+# Start with a conservative, non-disruptive rule set. Expand over time.
+select = [
+    "F",    # pyflakes (undefined names, unused imports, etc.)
+    "E9",   # syntax errors
+    "W605", # invalid escape sequence
+    "B",    # flake8-bugbear (likely bugs)
+]
+ignore = [
+    "B008", # do not perform function calls in argument defaults
+    "B905", # zip() without strict= (py38 compat)
+    "B904", # raise ... from err — stylistic; enable in a dedicated cleanup
+    "B010", # setattr with constant — used intentionally in loader
+    "B028", # no explicit stacklevel in warnings.warn
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.isort]
+profile = "black"
+skip = ["loaded_modules"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra -q"
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.8"
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_unused_ignores = false
+warn_redundant_casts = true
+# Typing is introduced gradually; keep non-strict for now.
+check_untyped_defs = false
+exclude = "loaded_modules"

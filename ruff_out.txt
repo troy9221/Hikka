@@ -1,0 +1,38 @@
+F401 [*] `aiogram.types.Message` imported but unused
+  --> hikka\inline\types.py:12:38
+   |
+10 | from aiogram.types import InlineQuery as AiogramInlineQuery
+11 | from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
+12 | from aiogram.types import Message as AiogramMessage
+   |                                      ^^^^^^^^^^^^^^
+13 |
+14 | from .. import utils
+   |
+help: Remove unused import: `aiogram.types.Message`
+
+B010 [*] Do not call `setattr` with a constant attribute value. It is not any safer than normal property access.
+    --> hikka\loader.py:1095:17
+     |
+1093 |         for _, method in utils.iter_attrs(mod):
+1094 |             if isinstance(method, InfiniteLoop):
+1095 |                 setattr(method, "module_instance", mod)
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1096 |
+1097 |                 if method.autostart:
+     |
+help: Replace `setattr` with assignment
+
+B028 No explicit `stacklevel` keyword argument found
+   --> hikka\security.py:419:17
+    |
+417 |                 import warnings
+418 |
+419 |                 warnings.warn(
+    |                 ^^^^^^^^^^^^^
+420 |                     (
+421 |                         "You are using module containing SUDO or SUPPORT security"
+    |
+help: Set `stacklevel=2`
+
+Found 3 errors.
+[*] 2 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

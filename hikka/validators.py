@@ -683,7 +683,7 @@ class NoneType(Validator):
 
     @staticmethod
     def _validate(value: ConfigAllowedTypes, /) -> None:
-        if not value:
+        if value:
             raise ValidationError(f"Passed value ({value}) is not None")
 
         return None
@@ -806,7 +806,9 @@ class EntityLike(RegExp):
         regex: str,
         flags: typing.Optional[re.RegexFlag],
     ) -> typing.Union[str, int]:
-        value = super()._validate(value, regex=regex, flags=flags)
+        # NB: zero-arg ``super()`` doesn't work inside a ``@staticmethod`` (there
+        # is no bound instance/class), so we call the parent validator explicitly.
+        value = RegExp._validate(value, regex=regex, flags=flags)
 
         if value.isdigit():
             if value.startswith("-100"):

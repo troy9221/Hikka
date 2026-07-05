@@ -4,6 +4,8 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
+import contextlib
+
 import git
 from hikkatl.tl.types import Message
 from hikkatl.utils import get_display_name
@@ -191,3 +193,45 @@ class HikkaInfoMod(loader.Module):
 
         self.config["custom_message"] = args
         await utils.answer(message, self.strings("setinfo_success"))
+
+    def _get_db_size(self) -> str:
+        """Возвращает человекочитаемый размер файла БД (или '—' для Redis)."""
+        db_file = getattr(self._db, "_db_file", None)
+        if db_file is None:
+            # Redis-бэкенд: локального файла нет
+            return "—"
+
+        with contextlib.suppress(Exception):
+            size = db_file.stat().st_size
+            for unit in ("B", "KB", "MB", "GB"):
+                if size < 1024:
+                    return f"{size:.1f} {unit}" if unit != "B" else f"{size} {unit}"
+                size /= 1024
+            return f"{size:.1f} TB"
+
+        return "—"
+
+    @loader.command()
+    async def diag(self, message: Message):
+        """Show userbot health diagnostics"""
+        redis_ok = bool(getattr(self._db, "_redis", None))
+        redis_state = self.strings(
+            "diag_redis_on" if redis_ok else "diag_redis_off"
+        )
+
+        modules_count = len(self.allmodules.modules)
+
+        await utils.answer(
+            message,
+            self.strings("diag").format(
+                uptime=utils.formatted_uptime(),
+                cpu=utils.get_cpu_usage(),
+                ram=utils.get_ram_usage(),
+                redis=redis_state,
+                modules=modules_count,
+                db_size=self._get_db_size(),
+                branch=version.branch,
+                version=".".join(map(str, version.__version__)),
+                platform=utils.remove_html(utils.get_named_platform()),
+            ),
+        )
