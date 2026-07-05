@@ -174,3 +174,4 @@ Pipfile.lock
 
 hikka.log.*
 unknown_errors.txt
+plans/plan.md
