@@ -157,10 +157,21 @@ class UpdaterMod(loader.Module):
             repo = Repo.init(os.path.dirname(utils.get_base_dir()))
             origin = repo.create_remote("origin", self.config["GIT_ORIGIN_URL"])
             origin.fetch()
-            repo.create_head("master", origin.refs.master)
-            repo.heads.master.set_tracking_branch(origin.refs.master)
-            repo.heads.master.checkout(True)
+            self._checkout_origin_branch(repo, origin)
             return False
+
+    def _checkout_origin_branch(self, repo: Repo, origin) -> None:
+        for name in (version.branch, "main", "master"):
+            try:
+                remote_ref = origin.refs[name]
+            except IndexError:
+                continue
+            if name not in repo.heads:
+                repo.create_head(name, remote_ref)
+            repo.heads[name].set_tracking_branch(remote_ref)
+            repo.heads[name].checkout(True)
+            return
+        raise RuntimeError("origin has neither main nor master")
 
     @staticmethod
     def req_common():
@@ -190,8 +201,11 @@ class UpdaterMod(loader.Module):
         try:
             args = utils.get_args_raw(message)
             current = utils.get_git_hash()
+            repo = git.Repo()
+            with contextlib.suppress(Exception):
+                repo.remote("origin").fetch()
             upcoming = next(
-                git.Repo().iter_commits(f"origin/{version.branch}", max_count=1)
+                repo.iter_commits(f"origin/{version.branch}", max_count=1)
             ).hexsha
             if (
                 "-f" in args

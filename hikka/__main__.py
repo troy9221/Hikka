@@ -47,11 +47,15 @@ def deps():
     )
 
 
-if sys.version_info < (3, 8, 0):
-    print("🚫 Error: you must use at least Python version 3.8.0")
+if sys.version_info < (3, 10, 0):
+    print("🚫 Error: you must use at least Python version 3.10.0")
+    print("   Python 3.12 is recommended. Python 3.13 is not supported.")
 elif __package__ != "hikka":  # In case they did python __main__.py
     print("🚫 Error: you cannot run this as a script; you must execute as a package")
 else:
+    if sys.version_info >= (3, 13, 0):
+        print("⚠️  Warning: Python 3.13+ is not supported. Use Python 3.12.")
+
     try:
         import hikkatl
     except Exception:
@@ -60,7 +64,7 @@ else:
         try:
             import hikkatl  # noqa: F811
 
-            if tuple(map(int, hikkatl.__version__.split("."))) < (2, 0, 4):
+            if tuple(map(int, hikkatl.__version__.split("."))) < (2, 0, 8):
                 raise ImportError
 
             import hikkapyro

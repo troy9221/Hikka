@@ -68,7 +68,7 @@ class CoreMod(loader.Module):
             )
             + (
                 ""
-                if version.branch == "master"
+                if version.branch in version.STABLE_BRANCHES
                 else self.strings("unstable").format(version.branch)
             ),
         )

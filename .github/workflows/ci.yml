@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
 
@@ -46,9 +46,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install test dependencies
-        # Only the deps required by the current test suite. The full
-        # requirements.txt pulls native builds that aren't needed for unit tests.
-        run: pip install pytest pytest-asyncio
+        run: |
+          pip install pytest pytest-asyncio
+          pip install -r requirements.txt
 
       - name: Run tests
         run: pytest

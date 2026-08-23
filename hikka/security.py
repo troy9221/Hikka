@@ -38,6 +38,39 @@ from .types import Command
 
 logger = logging.getLogger(__name__)
 
+
+async def inspect_channel_edit(
+    client, message
+) -> typing.Tuple[bool, typing.Optional[int]]:
+    """Inspect a possible channel post edit.
+
+    :return: ``(False, None)`` if this is not a channel post edit.
+             ``(True, user_id)`` if the editor was identified.
+             ``(True, None)`` if it is a channel edit but the editor
+             cannot be verified — callers must fail closed.
+    """
+    if not (
+        message
+        and getattr(message, "is_channel", False)
+        and not getattr(message, "is_group", False)
+        and getattr(message, "edit_date", None)
+    ):
+        return False, None
+
+    try:
+        async for event in client.iter_admin_log(
+            utils.get_chat_id(message),
+            limit=10,
+            edit=True,
+        ):
+            prev = getattr(getattr(event, "action", None), "prev_message", None)
+            if prev is not None and getattr(prev, "id", None) == message.id:
+                return True, event.user_id
+    except Exception:
+        logger.debug("Cannot inspect channel edit author", exc_info=True)
+
+    return True, None
+
 OWNER = 1 << 0
 SUDO = 1 << 1
 SUPPORT = 1 << 2
@@ -387,21 +420,12 @@ class SecurityManager:
             user_id = message.sender_id
 
         is_channel = False
-
-        if (
-            message
-            and message.is_channel
-            and not message.is_group
-            and message.edit_date
-        ):
-            async for event in self._client.iter_admin_log(
-                utils.get_chat_id(message),
-                limit=10,
-                edit=True,
-            ):
-                if event.action.prev_message.id == message.id:
-                    user_id = event.user_id
-                    is_channel = True
+        is_channel_edit, editor_id = await inspect_channel_edit(self._client, message)
+        if is_channel_edit:
+            if editor_id is None:
+                return False
+            user_id = editor_id
+            is_channel = True
 
         if (
             user_id == self._client.tg_id
@@ -422,6 +446,7 @@ class SecurityManager:
                         " groups, which are deprecated. It might behave strangely"
                     ),
                     DeprecationWarning,
+                    stacklevel=2,
                 )
                 self._last_warning = time.time()
 
