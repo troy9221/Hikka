@@ -3,7 +3,7 @@ extend-exclude = "loaded_modules"
 preview = true
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py310"
 line-length = 88
 extend-exclude = ["loaded_modules", "hikka/qr.py"]
 
@@ -17,7 +17,7 @@ select = [
 ]
 ignore = [
     "B008", # do not perform function calls in argument defaults
-    "B905", # zip() without strict= (py38 compat)
+    "B905", # zip() without strict=
     "B904", # raise ... from err — stylistic; enable in a dedicated cleanup
     "B010", # setattr with constant — used intentionally in loader
     "B028", # no explicit stacklevel in warnings.warn
@@ -37,7 +37,7 @@ addopts = "-ra -q"
 asyncio_mode = "auto"
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.10"
 ignore_missing_imports = true
 follow_imports = "silent"
 warn_unused_ignores = false

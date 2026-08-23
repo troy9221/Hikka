@@ -1092,7 +1092,7 @@ class Modules:
 
         for _, method in utils.iter_attrs(mod):
             if isinstance(method, InfiniteLoop):
-                setattr(method, "module_instance", mod)
+                method.module_instance = mod
 
                 if method.autostart:
                     method.start()

@@ -37,7 +37,7 @@ if [[ -z "${NO_AUTOSTART}" ]]; then
     printf "\n\r\033[0;34mConfiguring autostart...\e[0m"
 
     eval "echo '' > ~/../usr/etc/motd &&
-    echo 'clear && . <(wget -qO- https://github.com/troy9221/Hikka/raw/master/banner.sh) && cd ~/Hikka && python3 -m hikka' > ~/.bash_profile"
+    echo 'clear && . <(wget -qO- https://github.com/troy9221/Hikka/raw/main/banner.sh) && cd ~/Hikka && python3 -m hikka' > ~/.bash_profile"
 
     printf "\r\033[K\033[0;32mAutostart enabled!\e[0m\n"
 fi

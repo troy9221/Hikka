@@ -1,12 +1,12 @@
-hikka-tl-new==2.0.4
+hikka-tl-new==2.0.8
 hikka-pyro-new==2.0.103
 aiofile==3.8.1
-gitpython==3.1.27
+gitpython==3.1.45
 meval==2.5
-aiohttp_jinja2==1.5
-aiohttp==3.9.5
-Jinja2==3.0.3
-requests==2.27.1
+aiohttp_jinja2==1.6
+aiohttp==3.11.18
+Jinja2==3.1.6
+requests==2.32.5
 aiogram==3.29.0
 aiofiles==24.1.0
 magic-filter==1.0.12
@@ -14,11 +14,11 @@ pydantic==2.12.4
 certifi>=2023.7.22
 typing-extensions>=4.7.0
 grapheme==0.6.0
-emoji==2.1.0
-werkzeug==2.2.2
-psutil==5.9.4
+emoji==2.14.1
+werkzeug==3.1.3
+psutil==6.1.1
 rsa==4.9
-ruamel.yaml==0.17.21
+ruamel.yaml==0.18.10
 
 # Optional: tgcrypto speeds up crypto operations but has no Windows wheels.
 # On Linux install with: pip install tgcrypto==1.2.5

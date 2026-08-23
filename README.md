@@ -12,9 +12,7 @@
 
 <b>Внимание: </b>Если вы мнительный человек, вам не следует использовать этот юзербот. Этот юзербот не является вирусом, но может быть использован в злонамеренных целях. Вы несёте ответственность за все действия, совершённые вашим аккаунтом.  
   
-**Важное уведомление:** Версии `1.6.4` и `1.7.0` НЕ будут выпущены по причинам, описанным в журнале изменений.  
-Разработка начнётся с нуля в рамках нового проекта, о котором будет объявлено позже.  
-Начиная с марта 2025 года вы можете подать заявку на ранний этап альфа-тестирования через официальные каналы.  
+**Это поддерживаемый форк** архивного Hikka 1.6.3 ([hikariatama/Hikka](https://github.com/hikariatama/Hikka)). Версия **1.6.4** продолжает разработку: актуальные зависимости, исправления безопасности и совместимость с Python 3.12.  
 
 <hr>
 <h2><img src="https://github.com/hikariatama/assets/raw/master/1326-command-window-line-flat.webp" height="54" align="middle"> Установка</h2>
@@ -29,7 +27,7 @@
 <b>Ручная установка (Ubuntu/Debian):</b><br>
 <code>apt update && apt install git libcairo2 software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa -y && apt update && apt install python3.12 python3.12-venv -y && git clone https://github.com/troy9221/Hikka && cd Hikka && python3.12 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python -m hikka</code><br>
 <i>Если вы на VPS\VDS, добавьте <code>--proxy-pass</code> в конец команды, чтобы открыть SSH-туннель к web-интерфейсу Hikka, или используйте <code>--no-web</code> для завершения настройки в консоли</i><br>
-<i>Подробная инструкция (включая Windows, Termux и настройку автозапуска через systemd) — в <a href="https://github.com/troy9221/Hikka/blob/master/MANUAL.md">MANUAL.md</a></i><br>
+<i>Подробная инструкция (включая Windows, Termux и настройку автозапуска через systemd) — в <a href="https://github.com/troy9221/Hikka/blob/main/MANUAL.md">MANUAL.md</a></i><br>
 <br>
 <b>Дополнительные подробности:</b>
 
@@ -64,7 +62,7 @@
 <hr>
 <h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/680-it-developer-flat.webp" height="54" align="middle"> Документация</h2>
 
-Подробное руководство по установке, настройке и использованию — <a href="https://github.com/troy9221/Hikka/blob/master/MANUAL.md">MANUAL.md</a><br>
+Подробное руководство по установке, настройке и использованию — <a href="https://github.com/troy9221/Hikka/blob/main/MANUAL.md">MANUAL.md</a><br>
 
 <hr>
 <h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/981-consultation-flat.webp" height="54" align="middle"> <a href="https://t.me/hikka_talks">Поддержка</a></h2>

@@ -1,5 +1,14 @@
 # Hikka Changelog
 
+## 🌑 Hikka 1.6.4 (troy9221)
+
+- Continue development as a maintained fork of archived upstream 1.6.3
+- Treat `main` as the default/stable git branch (`.update` no longer assumes `master`)
+- Bump `hikkatl-new` to 2.0.8 and patch CVE-laden Python dependencies (`requests`, `gitpython`, `aiohttp`, `Jinja2`, `werkzeug`)
+- Fail closed on unverifiable channel message edits (hardening for CVE-2025-52571)
+- Require Python 3.10+ (3.12 recommended)
+- Keep emoji validator compatible with modern `emoji` package API
+
 ## 🌑 Grand finale
 
 - Remove all code, that might (even on paper) be considered as a security risk.
