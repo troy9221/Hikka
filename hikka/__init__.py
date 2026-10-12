@@ -1,4 +1,5 @@
 """Just a placeholder to do relative imports"""
+
 # ©️ Dan Gazizullin, 2021-2023
 # This file is a part of Hikka Userbot
 # 🌐 https://github.com/troy9221/Hikka
@@ -16,4 +17,5 @@ __maintainer__ = "developer"
 __status__ = "Production"
 
 from .telegram_compat import install as _install_telegram_compat
+
 _install_telegram_compat()
