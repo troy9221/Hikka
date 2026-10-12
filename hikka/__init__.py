@@ -14,3 +14,6 @@ __credits__ = ["LonamiWebs", "penn5"]
 __license__ = "AGPLv3"
 __maintainer__ = "developer"
 __status__ = "Production"
+
+from .telegram_compat import install as _install_telegram_compat
+_install_telegram_compat()

@@ -1,5 +1,12 @@
 # Hikka Changelog
 
+## Telegram API compatibility update
+
+- Use maintained Telethon 1.45.0 with current Telegram API types, including profile birthdays.
+- Preserve hikkatl imports and Hikka custom emoji markup for existing modules.
+- Reuse the existing SQLite session; no additional account login is required.
+
+
 ## 🌑 Hikka 1.6.4 (troy9221)
 
 - Continue development as a maintained fork of archived upstream 1.6.3
