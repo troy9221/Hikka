@@ -1,5 +1,11 @@
 # Hikka Changelog
 
+## Complete backup archive
+
+- Include settings, external module source files and the loader URL registry in one ZIP sent to the existing backup group.
+- Add full `.restorebackup` recovery and support restoring settings or modules separately from the same archive.
+- Keep legacy JSON and module ZIP backups compatible and restrict backup/recovery commands to the owner.
+
 ## Telegram API compatibility update
 
 - Use maintained Telethon 1.45.0 with current Telegram API types, including profile birthdays.
