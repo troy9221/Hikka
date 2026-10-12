@@ -156,9 +156,7 @@ class HikkaInfoMod(loader.Module):
                 if self.config["banner_url"]
                 else {"message": self._render_info(True)}
             ),
-            "thumb": (
-                "https://github.com/troy9221/Hikka/raw/main/assets/hikka_pfp.png"
-            ),
+            "thumb": "https://github.com/troy9221/Hikka/raw/main/assets/hikka_pfp.png",
             "reply_markup": self._get_mark(),
         }
 
@@ -215,9 +213,7 @@ class HikkaInfoMod(loader.Module):
     async def diag(self, message: Message):
         """Show userbot health diagnostics"""
         redis_ok = bool(getattr(self._db, "_redis", None))
-        redis_state = self.strings(
-            "diag_redis_on" if redis_ok else "diag_redis_off"
-        )
+        redis_state = self.strings("diag_redis_on" if redis_ok else "diag_redis_off")
 
         modules_count = len(self.allmodules.modules)
 

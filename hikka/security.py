@@ -71,6 +71,7 @@ async def inspect_channel_edit(
 
     return True, None
 
+
 OWNER = 1 << 0
 SUDO = 1 << 1
 SUPPORT = 1 << 2

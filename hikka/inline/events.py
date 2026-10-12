@@ -166,7 +166,9 @@ class Events(InlineUnit):
                                                 res.get("caption")
                                             ),
                                             parse_mode="HTML",
-                                            thumbnail_url=res.get("thumb", res["video"]),
+                                            thumbnail_url=res.get(
+                                                "thumb", res["video"]
+                                            ),
                                             video_url=res["video"],
                                             mime_type="video/mp4",
                                             reply_markup=self.generate_markup(
@@ -347,8 +349,9 @@ class Events(InlineUnit):
                 pass
             elif (
                 call.from_user.id not in self._client.dispatcher.security._owner
-                and call.from_user.id
-                not in self._custom_map[call.data].get("always_allow", [])
+                and call.from_user.id not in self._custom_map[call.data].get(
+                    "always_allow", []
+                )
             ):
                 await call.answer(self.translator.getkey("inline.button403"))
                 return
@@ -512,7 +515,9 @@ class Events(InlineUnit):
                         title=self.translator.getkey("inline.show_inline_cmds"),
                         description=self.translator.getkey("inline.no_inline_cmds"),
                         input_message_content=InputTextMessageContent(
-                            message_text=self.translator.getkey("inline.no_inline_cmds_msg"),
+                            message_text=self.translator.getkey(
+                                "inline.no_inline_cmds_msg"
+                            ),
                             parse_mode="HTML",
                             link_preview_options=LinkPreviewOptions(
                                 is_disabled=True,

@@ -348,8 +348,7 @@ class UpdaterMod(loader.Module):
                                 None,
                                 ignore_migrated=True,
                             )
-                            if dialog.name
-                            in {
+                            if dialog.name in {
                                 "hikka-logs",
                                 "hikka-onload",
                                 "hikka-assets",
@@ -368,8 +367,7 @@ class UpdaterMod(loader.Module):
                                 and dialog.entity.id
                                 == self._client.loader.inline.bot_id
                             )
-                            or dialog.entity.id
-                            in [
+                            or dialog.entity.id in [
                                 1554874075,
                                 1697279580,
                                 1679998924,

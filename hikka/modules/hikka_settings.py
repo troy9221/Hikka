@@ -78,8 +78,7 @@ class HikkaSettingsMod(loader.Module):
             ignore_migrated=True,
         ):
             if (
-                dialog.name
-                in {
+                dialog.name in {
                     "hikka-logs",
                     "hikka-onload",
                     "hikka-assets",
@@ -737,7 +736,9 @@ class HikkaSettingsMod(loader.Module):
                     {
                         "text": self.strings("disable_debugger"),
                         "callback": self.inline__setting,
-                        "args": (lambda: self._db.set(log.__name__, "debugger", False),),
+                        "args": (
+                            lambda: self._db.set(log.__name__, "debugger", False),
+                        ),
                     }
                     if self._db.get(log.__name__, "debugger", False)
                     else {

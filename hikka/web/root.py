@@ -84,10 +84,18 @@ class Web:
     @property
     def _platform_emoji(self) -> str:
         return {
-            "vds": "https://github.com/hikariatama/assets/raw/master/waning-crescent-moon_1f318.png",
-            "lavhost": "https://github.com/hikariatama/assets/raw/master/victory-hand_270c-fe0f.png",
-            "termux": "https://github.com/hikariatama/assets/raw/master/smiling-face-with-sunglasses_1f60e.png",
-            "docker": "https://github.com/hikariatama/assets/raw/master/spouting-whale_1f433.png",
+            "vds": (
+                "https://github.com/hikariatama/assets/raw/master/waning-crescent-moon_1f318.png"
+            ),
+            "lavhost": (
+                "https://github.com/hikariatama/assets/raw/master/victory-hand_270c-fe0f.png"
+            ),
+            "termux": (
+                "https://github.com/hikariatama/assets/raw/master/smiling-face-with-sunglasses_1f60e.png"
+            ),
+            "docker": (
+                "https://github.com/hikariatama/assets/raw/master/spouting-whale_1f433.png"
+            ),
         }[
             (
                 "lavhost"
@@ -95,9 +103,7 @@ class Web:
                 else (
                     "termux"
                     if "com.termux" in os.environ.get("PREFIX", "")
-                    else "docker"
-                    if "DOCKER" in os.environ
-                    else "vds"
+                    else "docker" if "DOCKER" in os.environ else "vds"
                 )
             )
         ]

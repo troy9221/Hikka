@@ -579,10 +579,13 @@ class CommandDispatcher:
             "contains": lambda: isinstance(m, Message) and func.contains in m.raw_text,
             "filter": lambda: callable(func.filter) and func.filter(m),
             "from_id": lambda: getattr(m, "sender_id", None) == func.from_id,
-            "chat_id": lambda: utils.get_chat_id(m) == (
-                func.chat_id
-                if not str(func.chat_id).startswith("-100")
-                else int(str(func.chat_id)[4:])
+            "chat_id": (
+                lambda: utils.get_chat_id(m)
+                == (
+                    func.chat_id
+                    if not str(func.chat_id).startswith("-100")
+                    else int(str(func.chat_id)[4:])
+                )
             ),
             "regex": lambda: (
                 isinstance(m, Message) and re.search(func.regex, m.raw_text)

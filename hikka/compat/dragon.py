@@ -122,8 +122,8 @@ class Notifier:
     def commands(self):
         return {
             key.split()[0]: (
-                (key.split()[1] + " - ") if len(key.split()) > 1 else ""
-            ) + value
+                ((key.split()[1] + " - ") if len(key.split()) > 1 else "") + value
+            )
             for key, value in self.cache[self.modname].items()
         }
 

@@ -32,7 +32,6 @@ _install_translations_stub()
 from hikka import validators  # noqa: E402
 from hikka.validators import ValidationError  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # Boolean
 # ---------------------------------------------------------------------------

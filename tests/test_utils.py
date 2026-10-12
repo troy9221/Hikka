@@ -9,7 +9,6 @@ import pytest
 
 from hikka import utils
 
-
 # ---------------------------------------------------------------------------
 # escape_html / escape_quotes
 # ---------------------------------------------------------------------------
@@ -39,7 +38,10 @@ def test_escape_html_non_str():
 
 
 def test_escape_quotes():
-    assert utils.escape_quotes('say "hi" & <bye>') == "say &quot;hi&quot; &amp; &lt;bye&gt;"
+    assert (
+        utils.escape_quotes('say "hi" & <bye>')
+        == "say &quot;hi&quot; &amp; &lt;bye&gt;"
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -600,7 +600,9 @@ class Modules:
 
                 spec = importlib.machinery.ModuleSpec(
                     module_name,
-                    StringLoader(Path(mod).read_text(encoding="utf-8"), user_friendly_origin),
+                    StringLoader(
+                        Path(mod).read_text(encoding="utf-8"), user_friendly_origin
+                    ),
                     origin=user_friendly_origin,
                 )
 
@@ -767,8 +769,9 @@ class Modules:
                     hasattr(func, "__self__")
                     and hasattr(self.inline_handlers[name], "__self__")
                     and (
-                        func.__self__.__class__.__name__
-                        != self.inline_handlers[name].__self__.__class__.__name__
+                        func.__self__.__class__.__name__ != self.inline_handlers[
+                            name
+                        ].__self__.__class__.__name__
                     )
                 ):
                     logger.debug(
@@ -789,8 +792,9 @@ class Modules:
             if name.lower() in self.callback_handlers and (
                 hasattr(func, "__self__")
                 and hasattr(self.callback_handlers[name], "__self__")
-                and func.__self__.__class__.__name__
-                != self.callback_handlers[name].__self__.__class__.__name__
+                and func.__self__.__class__.__name__ != self.callback_handlers[
+                    name
+                ].__self__.__class__.__name__
             ):
                 logger.debug(
                     "Duplicate callback_handler %s of %s",
@@ -805,8 +809,9 @@ class Modules:
             if name.lower() in self.inline_handlers and (
                 hasattr(func, "__self__")
                 and hasattr(self.inline_handlers[name], "__self__")
-                and func.__self__.__class__.__name__
-                == self.inline_handlers[name].__self__.__class__.__name__
+                and func.__self__.__class__.__name__ == self.inline_handlers[
+                    name
+                ].__self__.__class__.__name__
             ):
                 del self.inline_handlers[name.lower()]
                 logger.debug(
@@ -820,8 +825,9 @@ class Modules:
             if name.lower() in self.callback_handlers and (
                 hasattr(func, "__self__")
                 and hasattr(self.callback_handlers[name], "__self__")
-                and func.__self__.__class__.__name__
-                == self.callback_handlers[name].__self__.__class__.__name__
+                and func.__self__.__class__.__name__ == self.callback_handlers[
+                    name
+                ].__self__.__class__.__name__
             ):
                 del self.callback_handlers[name.lower()]
                 logger.debug(

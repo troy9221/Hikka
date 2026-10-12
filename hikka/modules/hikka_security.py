@@ -1224,8 +1224,7 @@ class HikkaSecurityMod(loader.Module):
                             "\n".join(
                                 [
                                     "<emoji document_id=5870704313440932932>🔒</emoji>"
-                                    " <code>{}</code> <b>{} {} {}</b> <code>{}</code>"
-                                    .format(
+                                    " <code>{}</code> <b>{} {} {}</b> <code>{}</code>".format(
                                         utils.escape_html(group.name),
                                         self._convert_time(
                                             int(rule["expires"] - time.time())

@@ -589,7 +589,7 @@ async def get_target(message: Message, arg_no: int = 0) -> typing.Optional[int]:
 
     if any(
         isinstance(entity, MessageEntityMentionName)
-        for entity in (message.entities or [])
+        for entity in message.entities or []
     ):
         e = sorted(
             filter(lambda x: isinstance(x, MessageEntityMentionName), message.entities),
@@ -768,8 +768,8 @@ async def asset_channel(
             if invite_bot:
                 if all(
                     participant.id != client.loader.inline.bot_id
-                    for participant in (
-                        await client.get_participants(d.entity, limit=100)
+                    for participant in await client.get_participants(
+                        d.entity, limit=100
                     )
                 ):
                     await fw_protect()
@@ -1267,9 +1267,7 @@ def get_commit_url() -> str:
     """
     try:
         hash_ = get_git_hash()
-        return (
-            f'<a href="https://github.com/troy9221/Hikka/commit/{hash_}">#{hash_[:7]}</a>'
-        )
+        return f'<a href="https://github.com/troy9221/Hikka/commit/{hash_}">#{hash_[:7]}</a>'
     except Exception:
         return "Unknown"
 
@@ -1439,8 +1437,9 @@ def find_caller(
                 if hasattr(frame_info, "function")
                 and frame_info.function == "future_dispatcher"
                 and (
-                    "CommandDispatcher"
-                    in getattr(getattr(frame_info, "frame", None), "f_globals", {})
+                    "CommandDispatcher" in getattr(
+                        getattr(frame_info, "frame", None), "f_globals", {}
+                    )
                 )
             ),
             None,

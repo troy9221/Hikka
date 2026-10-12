@@ -197,7 +197,9 @@ def save_config_key(key: str, value: str) -> bool:
     # Assign config value
     config[key] = value
     # And save config
-    CONFIG_PATH.write_text(json.dumps(config, indent=4, ensure_ascii=False), encoding="utf-8")
+    CONFIG_PATH.write_text(
+        json.dumps(config, indent=4, ensure_ascii=False), encoding="utf-8"
+    )
     return True
 
 
@@ -411,9 +413,11 @@ class Hikka:
             if not get_config_key("api_id"):
                 api_id, api_hash = (
                     line.strip()
-                    for line in (Path(BASE_DIR) / "api_token.txt")
-                    .read_text(encoding="utf-8")
-                    .splitlines()
+                    for line in (
+                        (Path(BASE_DIR) / "api_token.txt")
+                        .read_text(encoding="utf-8")
+                        .splitlines()
+                    )
                 )
                 save_config_key("api_id", int(api_id))
                 save_config_key("api_hash", api_hash)

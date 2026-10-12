@@ -257,7 +257,7 @@ class TelegramLogsHandler(logging.Handler):
         """Return all entries of minimum level as list of strings"""
         return [
             self.targets[0].format(record)
-            for record in (self.buffer + self.handledbuffer)
+            for record in self.buffer + self.handledbuffer
             if record.levelno >= lvl
             and (not record.hikka_caller or client_id == record.hikka_caller)
         ]

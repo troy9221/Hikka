@@ -12,7 +12,9 @@ import pathlib
 
 import pytest
 
-EVAL_PATH = pathlib.Path(__file__).resolve().parent.parent / "hikka" / "modules" / "eval.py"
+EVAL_PATH = (
+    pathlib.Path(__file__).resolve().parent.parent / "hikka" / "modules" / "eval.py"
+)
 
 
 def _load_brainfuck():
